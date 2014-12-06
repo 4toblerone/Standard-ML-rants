@@ -114,8 +114,6 @@ fun all_same_color1(cs: card list)=
 						  	  else false
 						  else false;
 
-
-
 fun sum_cards (cs : card list)=
 	let 
 		fun helpsum(cs : card list, counter : int)=
@@ -126,4 +124,14 @@ fun sum_cards (cs : card list)=
 	end;
 
 fun score(cs : card list , goal : int)=
-
+let
+	val sum = sum_cards(cs)
+	fun prelim_score(cs:card list)=
+		if sum > goal 
+		then 3*(sum-goal) 
+		else goal - sum
+in
+	if all_same_color1(cs)
+	then prelim_score(cs) div 2
+	else prelim_score(cs)
+end
