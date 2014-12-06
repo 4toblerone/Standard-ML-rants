@@ -34,8 +34,9 @@ fun same_string(s1 : string, s2 : string) =
 
 fun all_except_option (str:string, strlist : string list)=
 	case strlist of [] => NONE 
- 				  | x::xs => if same_string(x,str) then SOME xs 
- 									  else case all_except_option(str, xs) of
+ 				  | x::xs => if same_string(x,str) 
+ 				  			 then SOME xs 
+ 							 else case all_except_option(str, xs) of
  												SOME y=> SOME (x::y)
  											   | NONE => NONE ;
 
@@ -65,3 +66,64 @@ end;
 
 val de = similiar_names([["Fred","Fredrick"],["Elizabeth","Betty"],["Freddie","Fred","F"]],
 {first="Fred", middle="W", last="Smith"});
+
+(*Second part of the second assignment*)
+
+(* you may assume that Num is always used with values 2, 3, ..., 10
+   though it will not really come up *)
+datatype suit = Clubs | Diamonds | Hearts | Spades
+datatype rank = Jack | Queen | King | Ace | Num of int
+type card = suit * rank
+
+datatype color = Red | Black
+datatype move = Discard of card | Draw 
+
+exception IllegalMove
+
+(* put your solutions for problem 2 here *)
+
+val c = (Clubs ,Num 7);
+
+
+fun card_color (c : card)=
+	case c of (Clubs,_) => Black
+			| (Spades,_)=> Black
+			| (Diamonds,_)=> Red
+			| (Hearts,_)=> Red
+
+fun card_value (c : card)=
+	case c of (_, Jack)=> 10
+			| (_, Queen)=> 10
+			| (_, King)=> 10
+			| (_, Ace)=> 11
+			| (_, Num i) => i;
+
+
+fun remove_card(cs : card list, c : card, e: exn)=
+	case cs of [] => raise e
+			| x::xs => if x = c then xs else x::remove_card(xs,c,e);
+
+(* find way to make it cleaner *)
+fun all_same_color1(cs: card list)=
+	case cs of [] => true
+			| x::[]=>true
+			| x::y::xs => if card_color(x)= card_color(y) 
+						  then 
+						  	  if all_same_color1(y::xs) 
+						  	  then true 
+						  	  else false
+						  else false;
+
+
+
+fun sum_cards (cs : card list)=
+	let 
+		fun helpsum(cs : card list, counter : int)=
+			case cs of []=> counter
+						| x::xs=> helpsum(xs,counter + card_value(x))
+	in
+		helpsum(cs,0)
+	end;
+
+fun score(cs : card list , goal : int)=
+
