@@ -135,3 +135,79 @@ in
 	then prelim_score(cs) div 2
 	else prelim_score(cs)
 end
+
+fun officiate(cs: card list, ml : move list, goal : int)=
+	(*returns the score at the end of the
+game after processing (some or all of) the moves in the move list in order*)
+	1
+
+(*fun factorial 0 = 1
+	| factorial(n:int) = n * factorial(n-1);
+
+fun d = fn x=> x+1;
+
+val p = d;*)
+
+(*Part 3*)
+
+(*fun only_capitals(ls)=
+	List.filter (fn x=> Char.isUpper(String.sub(x,0))) ls;
+*)
+
+fun only_capitals(ls)=
+	List.filter (fn x => Char.isUpper(String.sub(x,0))) ls;
+
+fun longest_string1(ls)=
+	List.foldl 
+		(fn (x,y) =>if String.size(x)>String.size(y) 
+					then x 
+					else y) 
+		"" 
+		ls;
+
+fun longest_string2(ls)=
+	List.foldl 
+		(fn (x,y) =>if String.size(x)>=String.size(y) 
+					then x 
+					else y) 
+		"" 
+		ls;
+
+(*Write functions longest_string_helper, longest_string3, and longest_string4 such that:
+
+• longest_string3 has the same behavior as longest_string1 and longest_string4 has the
+same behavior as longest_string2.
+
+• longest_string_helper has type (int * int -> bool) -> string list -> string
+(notice the currying). This function will look a lot like longest_string1 and longest_string2
+but is more general because it takes a function as an argument.
+
+• If longest_string_helper is passed a function that behaves like > (so it returns true exactly
+when its first argument is stricly greater than its second), then the function returned has the same
+behavior as longest_string1.
+
+• longest_string3 and longest_string4 are defined with val-bindings and partial applications
+of longest_string_helper.*)
+
+fun longest_string_helper f ls = 
+	List.foldl 
+		(fn (x,y) => if f(String.size(x),String.size(y)) then x else y) "" ls;
+
+val longest_string3 = longest_string_helper (fn (x,y) => x>y);
+
+val d = longest_string3 ["sta", "sada"];
+
+val longest_string4 = longest_string_helper (fn (x,y) => x>=y);
+
+(*Write a function longest_capitalized that takes a string list and returns the longest string in
+the list that begins with an uppercase letter, or "" if there are no such strings. Assume all strings
+have at least 1 character. Use a val-binding and the ML library’s o operator for composing functions.
+Resolve ties like in problem 2.*)
+
+val longest_capitalized = longest_string2 o only_capitals;
+
+(*Write a function rev_string that takes a string and returns the string that is the same characters in
+reverse order. Use ML’s o operator, the library function rev for reversing lists, and two library functions
+in the String module. (Browse the module documentation to find the most useful functions.)
+*)
+
